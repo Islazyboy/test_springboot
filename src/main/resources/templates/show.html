@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--suppress ALL-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>展示页面</title>
+</head>
+<body>
+    <h1>展示页面</h1>
+    <form th:action="@{/emp/goShow}" method="post">
+        姓名：<input type="text" name="name" th:value="${emp.name}">
+        时间1<input type="date" name="starttime" th:value="${#dates.format(emp.starttime,'y-M-d')}">
+        时间2<input type="date" name="endtime" th:value="${#dates.format(emp.endtime,'y-M-d')}">
+        <input type="submit" value="搜索">
+    </form>
+    <a th:href="@{/emp/goAdd}">添加</a>
+    <table border="1" cellspacing="0">
+        <tr>
+            <td>工号</td>
+            <td>姓名</td>
+            <td>年龄</td>
+            <td>生日</td>
+            <td>操作</td>
+        </tr>
+        <tr th:each="e:${page.list}">
+            <td th:text="${e.eid}"></td>
+            <td th:text="${e.name}"></td>
+            <td th:text="${e.age}"></td>
+            <td th:text="${#dates.format(e.birthday,'y-M-d')}"></td>
+            <td><a th:href="@{/emp/delById(id=${e.id})}">删除</a> <a th:href="@{/emp/findById(id=${e.id})}">修改</a></td>
+        </tr>
+    </table>
+
+    <div>
+        <a th:href="@{/emp/goShow(pageNum=1)}">首页</a>
+        <span th:if="${page.pageNum<=1}">上一页</span>
+        <span th:if="${page.pageNum>1}"><a th:href="@{/emp/goShow(pageNum=${page.prePage},name=${emp.name},starttime=${emp.starttime},endtime=${emp.endtime})}">上一页</a></span>
+
+        <span th:if="${page.pageNum>=page.nextPage}">下一页</span>
+        <span th:if="${page.pageNum<page.nextPage}"><a th:href="@{/emp/goShow(pageNum=${page.nextPage},name=${emp.name},starttime=${emp.starttime},endtime=${emp.endtime})}">下一页</a></span>
+        <a th:href="@{/emp/goShow(pageNum=${page.pages})}">尾页</a>
+        第<span th:text="${page.pageNum}"></span>页/共<span th:text="${page.lastPage}"></span>页</span>，共<span th:text="${page.total}"></span>条数据
+    </div>
+</body>
+</html>
